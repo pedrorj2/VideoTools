@@ -3,12 +3,9 @@ from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 import os
 from math import sqrt
-import hashlib
 
-def create_watermark(input_image_path, output_path, original_filename):
-    # Generar código único basado en el nombre del archivo
-    file_hash = hashlib.md5(original_filename.encode()).hexdigest()[:6]
-    watermark_text = f"@pedro.rj2 #{file_hash}"
+def create_watermark(input_image_path, output_path, file_code):
+    watermark_text = f"@pedro.rj2 #{file_code}"
     
     # Abrir imagen
     with Image.open(input_image_path) as img:
@@ -23,7 +20,7 @@ def create_watermark(input_image_path, output_path, original_filename):
         
         # Calcular tamaño de fuente basado en la diagonal de la imagen
         diagonal = sqrt(width**2 + height**2)
-        font_size = int(diagonal * 0.04)  # 2.5% de la diagonal
+        font_size = int(diagonal * 0.025)  # 2.5% de la diagonal
         
         try:
             # Intentar usar Arial
@@ -48,11 +45,15 @@ def create_watermark(input_image_path, output_path, original_filename):
         x_spacing = textwidth + 50
         y_spacing = textheight + 50
         
+        # Calcular punto de inicio para que el texto comience desde el borde
+        start_x = 0
+        start_y = 0
+        
         # Dibujar marca de agua en patrón diagonal
-        y = -height
-        while y < height*2:
-            x = -width
-            while x < width*2:
+        y = start_y
+        while y < height:
+            x = start_x
+            while x < width:
                 # Dibujar texto semi-transparente
                 d.text((x, y), watermark_text, font=font, fill=(128, 128, 128, 30))
                 # Dibujar texto sólido
@@ -65,12 +66,6 @@ def create_watermark(input_image_path, output_path, original_filename):
         
         # Guardar resultado
         watermarked.convert('RGB').save(output_path, 'JPEG', quality=95)
-        
-        # Guardar registro del código único y nombre original
-        log_entry = f"{file_hash},{original_filename}\n"
-        with open(os.path.join(os.path.dirname(output_path), "watermark_log.csv"), "a") as log_file:
-            log_file.write(log_entry)
-        
         return True
 
 def process_directory(input_dir, output_dir):
@@ -79,11 +74,6 @@ def process_directory(input_dir, output_dir):
 
     os.makedirs(output_dir, exist_ok=True)
     supported_extensions = ('.jpg', '.jpeg', '.png', '.bmp', '.tiff')
-
-    # Crear o limpiar el archivo de registro
-    log_path = os.path.join(output_dir, "watermark_log.csv")
-    with open(log_path, "w") as log_file:
-        log_file.write("código,archivo_original\n")
 
     for filename in os.listdir(input_dir):
         if filename.lower().endswith(supported_extensions):
@@ -97,7 +87,7 @@ def process_directory(input_dir, output_dir):
                 create_watermark(
                     input_path,
                     output_path,
-                    filename
+                    name  # Usando el nombre del archivo como código
                 )
                 print(f"Completado: {filename}")
             except Exception as e:
@@ -112,5 +102,8 @@ if __name__ == "__main__":
     os.makedirs(output_directory, exist_ok=True)
     
     process_directory(input_directory, output_directory)
+
+
+
 
 
