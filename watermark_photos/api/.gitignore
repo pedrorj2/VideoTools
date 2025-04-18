@@ -31,3 +31,7 @@ ENV/
 .vscode/
 temp/
 .DS_Store
+
+# Archivos de configuración con credenciales
+config.py
+*.log
