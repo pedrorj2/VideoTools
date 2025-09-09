@@ -2,6 +2,8 @@
 *.jpeg
 *.png
 *.bmp
+*.gif
+*.webp
 *.tiff
 __pycache__/
 *.py[cod]
