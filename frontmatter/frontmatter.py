@@ -66,6 +66,8 @@ if __name__ == "__main__":
     # Color de la franja (RGB: 0-255)
     # RGB_COLOR = (52, 177, 201)  # MNP       
     RGB_COLOR = (52,177,32)   # MP
+    RGB_COLOR = (30,30,180)   # EDPs
+    RGB_COLOR = (178, 238, 248)
     # RGB_COLOR = (0, 128, 255)     # Azul
     # RGB_COLOR = (50, 50, 80)      # Azul oscuro espacial
     
@@ -73,7 +75,7 @@ if __name__ == "__main__":
     STRIPE_HEIGHT_RATIO = 0.3      # 60% del alto de la imagen
 
     # Opacidad de la franja (0 = transparente, 255 = opaco)
-    OPACITY = 140                  # Semitransparente (recomendado: 80-150)
+    OPACITY = 200                 # Semitransparente (recomendado: 80-150)
     
     # ===== FIN DE CONFIGURACIÓN =====
     
